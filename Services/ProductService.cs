@@ -24,10 +24,25 @@ public class ProductService
         return filtered;
     }
 
+    public async Task<JsonElement> GetProductByIdAsync(string id)
+    {
+        var response = await _httpClient.GetAsync($"{BaseUrl}/{id}");
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<JsonElement>();
+    }
+
     public async Task<JsonElement> AddProductAsync(ProductDto dto)
     {
         var payload = new { name = dto.Name, data = new { description = dto.Description, price = dto.Price } };
         var response = await _httpClient.PostAsJsonAsync(BaseUrl, payload);
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<JsonElement>();
+    }
+
+    public async Task<JsonElement> UpdateProductAsync(string id, ProductDto dto)
+    {
+        var payload = new { name = dto.Name, data = new { description = dto.Description, price = dto.Price } };
+        var response = await _httpClient.PutAsJsonAsync($"{BaseUrl}/{id}", payload);
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<JsonElement>();
     }

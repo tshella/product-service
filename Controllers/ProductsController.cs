@@ -15,12 +15,27 @@ public class ProductsController(ProductService service) : ControllerBase
         return Ok(result);
     }
 
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById(string id)
+    {
+        var result = await service.GetProductByIdAsync(id);
+        return Ok(result);
+    }
+
     [HttpPost]
     public async Task<IActionResult> Add([FromBody] ProductDto dto)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
         var result = await service.AddProductAsync(dto);
         return Created("", result);
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update(string id, [FromBody] ProductDto dto)
+    {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+        var result = await service.UpdateProductAsync(id, dto);
+        return Ok(result);
     }
 
     [HttpDelete("{id}")]
